@@ -128,7 +128,22 @@ public class CrosswordMagicViewModel extends ViewModel {
         StringBuilder dString = new StringBuilder();
 
         try {
+            fields = br.readLine().trim().split("\t");
+            puzzleHeight.setValue(Integer.valueOf(fields[0]));
+            puzzleWidth.setValue(Integer.valueOf(fields[1]));
 
+            while (!(line = br.readLine()).isEmpty()){
+                fields = line.trim().split("\t");
+                String wordKey = ((new StringBuilder()).append(fields[2]).append(fields[3])).toString();
+                wordMap.put(wordKey, new Word(fields));
+
+                if (fields[3].equals("A")){
+                    aString.append(fields[2]).append(": ").append(fields[5]).append("\n");
+                }
+                else if (fields[3].equals("D")){
+                    dString.append(fields[2]).append(": ").append(fields[5]).append("\n");
+                }
+            }
             // Read from the input file using the "br" input stream shown above.  Your program
             // should get the puzzle height/width from the header row in the first line of the
             // input file.  Replace the placeholder values shown below with the values from the
@@ -137,8 +152,6 @@ public class CrosswordMagicViewModel extends ViewModel {
             // Word object to the "wordMap" hash map; for the key names, use the box number
             // followed by the direction (for example, "16D" for Box # 16, Down).
 
-            puzzleHeight.setValue(15); // DELETE THIS!
-            puzzleWidth.setValue(15); // DELETE THIS!
 
         } catch (Exception e) {}
 
@@ -160,8 +173,18 @@ public class CrosswordMagicViewModel extends ViewModel {
         for (HashMap.Entry<String, Word> e : wordMap.entrySet()) {
 
             Word w = e.getValue();
+            for (int i = 0; i < w.getWord().length(); i++){
+                if (w.getDirection().equals("D")){
+                    //aLetters[w.getRow() + i][w.getColumn()] = w.getWord().charAt(i);
+                    aLetters[w.getRow() + i][w.getColumn()] = ' ';
+                }
+                else if (w.getDirection().equals("A")){
+                    //aLetters[w.getRow()][w.getColumn() + i] = w.getWord().charAt(i);
+                    aLetters[w.getRow()][w.getColumn() + i] = ' ';
+                }
+            }
 
-            // INSERT YOUR CODE HERE
+            aNumbers[w.getRow()][w.getColumn()] = w.getBox();
 
         }
 
