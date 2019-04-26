@@ -1,15 +1,19 @@
 package mcis.jsu.edu.crosswordmagic;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.GridLayout;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ public class PuzzleFragmentView extends Fragment implements View.OnClickListener
 
     View root;
     private CrosswordMagicViewModel model;
+    public String userInput;
 
     public PuzzleFragmentView() {}
 
@@ -219,20 +224,39 @@ public class PuzzleFragmentView extends Fragment implements View.OnClickListener
         /* Was a number clicked?  If so, display it in a Toast */
 
         if (numbers[row][col] != 0) {
+            final Word acrossWord = model.getWord(row, col, "A");
+            final Word downWord = model.getWord(row, col, "D");
 
-            Toast toast=Toast.makeText(getContext(), "You have just tapped Square " + numbers[row][col], Toast.LENGTH_SHORT);
-            toast.show();
-
-            /* Add an "X" to Clicked Square */
-
-            GridLayout squaresContainer = getActivity().findViewById(R.id.squaresContainer);
-            TextView element = (TextView) squaresContainer.getChildAt(index);
-            element.setText("X");
-
-            /* Update Grid Contents */
-
-            updatePuzzleView();
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Enter Your Guess");
+            final EditText input = new EditText(getActivity());
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface d, int i) {
+                    userInput = input.getText().toString().toUpperCase();
+                    if (acrossWord != null){
+                        if (userInput.equals(acrossWord.getWord())){
+                            model.addWordToGrid(acrossWord);
+                        }
+                    }
+                    if (downWord != null){
+                        if (userInput.equals(downWord.getWord())){
+                            model.addWordToGrid(downWord);
+                        }
+                    }
+                    updatePuzzleView();
+                }
+            });
+            builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface d, int i) {
+                    userInput = "";
+                    d.cancel();
+                }
+            });
+            AlertDialog aboutDialog = builder.show();
         }
 
     }

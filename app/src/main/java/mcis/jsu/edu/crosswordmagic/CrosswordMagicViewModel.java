@@ -173,13 +173,12 @@ public class CrosswordMagicViewModel extends ViewModel {
         for (HashMap.Entry<String, Word> e : wordMap.entrySet()) {
 
             Word w = e.getValue();
+
             for (int i = 0; i < w.getWord().length(); i++){
-                if (w.getDirection().equals("D")){
-                    //aLetters[w.getRow() + i][w.getColumn()] = w.getWord().charAt(i);
+                if (w.isDown()){
                     aLetters[w.getRow() + i][w.getColumn()] = ' ';
                 }
-                else if (w.getDirection().equals("A")){
-                    //aLetters[w.getRow()][w.getColumn() + i] = w.getWord().charAt(i);
+                else if (w.isAcross()){
                     aLetters[w.getRow()][w.getColumn() + i] = ' ';
                 }
             }
@@ -191,6 +190,29 @@ public class CrosswordMagicViewModel extends ViewModel {
         this.letters.setValue(aLetters);
         this.numbers.setValue(aNumbers);
 
+    }
+
+    public Word getWord(int rowNumber, int columnNumber, String direction){
+        Word word = null;
+        for (Word w: getWords().values()){
+            if (w.getColumn() == columnNumber && rowNumber == w.getRow() && w.getDirection().equals(direction)) {
+                word = w;
+            }
+        }
+        return word;
+    }
+
+    public void addWordToGrid(Word word){
+        Character[][] aLetters = this.letters.getValue();
+        for (int i = 0; i < word.getWord().length(); i++){
+            if (word.getDirection().equals("D")){
+                aLetters[word.getRow() + i][word.getColumn()] = word.getWord().charAt(i);
+            }
+            else if (word.getDirection().equals("A")){
+                aLetters[word.getRow()][word.getColumn() + i] = word.getWord().charAt(i);
+            }
+        }
+        this.letters.setValue(aLetters);
     }
 
 }
