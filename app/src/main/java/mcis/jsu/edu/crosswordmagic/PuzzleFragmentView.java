@@ -239,14 +239,15 @@ public class PuzzleFragmentView extends Fragment implements View.OnClickListener
                     if (acrossWord != null){
                         if (userInput.equals(acrossWord.getWord())){
                             model.addWordToGrid(selectedBox, "A");
+                            updatePuzzleView();
                         }
                     }
                     if (downWord != null){
                         if (userInput.equals(downWord.getWord())){
                             model.addWordToGrid(selectedBox, "D");
+                            updatePuzzleView();
                         }
                     }
-                    updatePuzzleView();
                 }
             });
             builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
