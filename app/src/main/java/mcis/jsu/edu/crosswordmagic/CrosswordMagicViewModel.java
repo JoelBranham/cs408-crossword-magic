@@ -192,24 +192,19 @@ public class CrosswordMagicViewModel extends ViewModel {
 
     }
 
-    public Word getWord(int rowNumber, int columnNumber, String direction){
-        Word word = null;
-        for (Word w: getWords().values()){
-            if (w.getColumn() == columnNumber && rowNumber == w.getRow() && w.getDirection().equals(direction)) {
-                word = w;
-            }
-        }
-        return word;
+    public Word getWord(int selectedBox, String direction){
+        return getWords().get((new StringBuilder(Integer.toString(selectedBox))).append(direction).toString());
     }
 
-    public void addWordToGrid(Word word){
+    public void addWordToGrid(int selectedBox, String direction){
+        Word wordToAdd = getWord(selectedBox, direction);
         Character[][] aLetters = this.letters.getValue();
-        for (int i = 0; i < word.getWord().length(); i++){
-            if (word.getDirection().equals("D")){
-                aLetters[word.getRow() + i][word.getColumn()] = word.getWord().charAt(i);
+        for (int i = 0; i < wordToAdd.getWord().length(); i++){
+            if (direction.equals("D")){
+                aLetters[wordToAdd.getRow() + i][wordToAdd.getColumn()] = wordToAdd.getWord().charAt(i);
             }
-            else if (word.getDirection().equals("A")){
-                aLetters[word.getRow()][word.getColumn() + i] = word.getWord().charAt(i);
+            else if (direction.equals("A")){
+                aLetters[wordToAdd.getRow()][wordToAdd.getColumn() + i] = wordToAdd.getWord().charAt(i);
             }
         }
         this.letters.setValue(aLetters);

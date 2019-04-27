@@ -221,14 +221,14 @@ public class PuzzleFragmentView extends Fragment implements View.OnClickListener
 
         Integer[][] numbers = model.getNumbers();
 
-        /* Was a number clicked?  If so, display it in a Toast */
-
         if (numbers[row][col] != 0) {
-            final Word acrossWord = model.getWord(row, col, "A");
-            final Word downWord = model.getWord(row, col, "D");
+            final int selectedBox = numbers[row][col];
+
+            final Word acrossWord = model.getWord(selectedBox, "A");
+            final Word downWord = model.getWord(selectedBox, "D");
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Enter Your Guess");
+            builder.setTitle(R.string.enterYourGuess);
             final EditText input = new EditText(getActivity());
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             builder.setView(input);
@@ -238,12 +238,12 @@ public class PuzzleFragmentView extends Fragment implements View.OnClickListener
                     userInput = input.getText().toString().toUpperCase();
                     if (acrossWord != null){
                         if (userInput.equals(acrossWord.getWord())){
-                            model.addWordToGrid(acrossWord);
+                            model.addWordToGrid(selectedBox, "A");
                         }
                     }
                     if (downWord != null){
                         if (userInput.equals(downWord.getWord())){
-                            model.addWordToGrid(downWord);
+                            model.addWordToGrid(selectedBox, "D");
                         }
                     }
                     updatePuzzleView();
